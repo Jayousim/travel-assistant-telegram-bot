@@ -6,6 +6,11 @@ import requests
 app = Flask(__name__)
 
 
+@app.route('/sanity')
+def sanity():
+    return "Server is running"
+
+
 @app.route('/message', methods=["POST"])
 def handle_message():
     print("got message")

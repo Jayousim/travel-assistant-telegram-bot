@@ -17,11 +17,13 @@ class SearchEngine:
 
     @staticmethod
     def get_place_photos(location):
-        return location.get('photos')
+        photos_info = location.get('photos')[0]
+        return GoogleApiInvoker.get_place_photos(photos_info['photo_reference'])
+
+
 
     @staticmethod
     def get_street_photos(location):
-
         pass
 
     @staticmethod

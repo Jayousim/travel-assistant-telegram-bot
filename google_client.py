@@ -1,5 +1,3 @@
-import time
-from flask import Flask, request
 import requests
 from config import GOOGLE_KEY
 
@@ -8,9 +6,17 @@ class GoogleApiInvoker:
     key = GOOGLE_KEY
     textsearch = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
     nearbysearch = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
-    place_search = ''
+    photo_request = 'https://maps.googleapis.com/maps/api/place/photo?'
     radius = 100
     MAX_HOTELS = 5
+
+    @staticmethod
+    def get_place_photos(reference):
+        photo_query = reference
+        maxwidth = "maxwidth=400"
+        maxheight  = "maxheight=400"
+        ans = f"{GoogleApiInvoker.photo_request}{maxwidth}&{maxheight}&key={GoogleApiInvoker.key}&photoreference={photo_query}"
+        return ans
 
     @staticmethod
     def get_street_photos(loacation):
@@ -18,7 +24,6 @@ class GoogleApiInvoker:
 
     @staticmethod
     def get_place_description(place):
-
         pass
 
     @staticmethod

@@ -17,7 +17,7 @@ class SearchEngine:
 
     @staticmethod
     def get_place_photos(location):
-        return GoogleApiInvoker.ge
+        return location.get('photos')
 
     @staticmethod
     def get_street_photos(location):

@@ -48,7 +48,7 @@ class Bot:
                 return SearchEngine.get_place_photos(hotel)
       
     @staticmethod
-    def return_relevant_hotels(destination, category, last_hotels):
+    def return_relevant_hotels(destination, category):
         found_hotels, last_hotels = SearchEngine.find_top_stays_with_type(destination, category)
         response = ""
         for hotel, surrounding in found_hotels:

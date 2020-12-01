@@ -13,9 +13,6 @@ class GoogleApiInvoker:
     MAX_HOTELS = 5
 
     @staticmethod
-    def get_place_photos(location):
-
-    @staticmethod
     def get_street_photos(loacation):
         pass
 

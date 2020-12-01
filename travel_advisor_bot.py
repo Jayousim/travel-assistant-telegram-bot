@@ -2,12 +2,14 @@ from dataclasses import dataclass
 from google_client import *
 from database import *
 import emoji
-from google_client import GoogleApiInvoker
 
+#from google_client import GoogleApiInvoker
+
+from model import SearchEngine
 
 @dataclass
 class Bot:
-
+    engine = SearchEngine()
     @staticmethod
     def greet_the_user():
         return f"{emoji.emojize(':waving_hand:')} welcome to travel assistance\n\n " \
@@ -39,11 +41,18 @@ class Bot:
     def show_help_menu(message):
         return "func1"
 
-    @classmethod
-    def return_relevant_hotels(cls, destination, category):
-        hotels = GoogleApiInvoker.get_hotels(destination)
-        hotels_activities = []
-        for hotel in hotels:
-            hotels_activities.append([hotel.get('name'), GoogleApiInvoker.get_activities_by_hotel(hotel, category)])
-        hotels_activities = sorted(hotels_activities, key=lambda item_: len(item_[1]), reverse=True)
-        return [temp[0] for temp in hotels_activities[:GoogleApiInvoker.MAX_HOTELS]]
+      
+    @staticmethod
+    def return_relevant_hotels(destination, category):
+        found_hotels = SearchEngine.find_top_stays_with_type(destination, category)
+        response = ""
+        for hotel, surrounding in found_hotels:
+            response += hotel
+            response += "which has "
+            response += str(surrounding)
+            response += " " + ' '.join(message.split()[1::])
+            response += " nearby"
+            response += '\n'
+        return response
+
+

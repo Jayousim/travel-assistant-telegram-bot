@@ -1,6 +1,6 @@
 from flask import Flask, Response, request
 from config import TELEGRAM_INIT_WEBHOOK_URL, TOKEN
-from parser import parse_command
+from command_parser import parse_command
 import requests
 
 app = Flask(__name__)
@@ -19,7 +19,6 @@ def handle_message():
 
 
 if __name__ == '__main__':
-    requests.get(TELEGRAM_INIT_WEBHOOK_URL)
     app.run(port=5002, threaded=True)
 
 

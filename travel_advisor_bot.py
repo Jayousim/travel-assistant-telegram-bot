@@ -20,9 +20,8 @@ class Bot:
 
     @staticmethod
     def send_photo(chat_id, response):
-        image_url = requests.get('https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=' + response + '&key=' + GOOGLE_KEY)
-        res = requests.get(send_message_req + "?chat_id={}&text={}"
-                           .format(chat_id, image_url.url))
+        image_url = requests.get(response)
+        res = requests.get(send_message_req + "?chat_id={}&text={}".format(chat_id, image_url.url))
 
     @staticmethod
     def greet_the_user(chat_id):
@@ -49,6 +48,7 @@ class Bot:
             category = my_list[1]
             destination = get_previous_message(chat_id)
             hotels = Bot.return_relevant_hotels(destination, category)
+
             response = f"yay!! we found some relevant hotels here what we found:\n {hotels}\n\n" \
                    f"to see the hotel images use this format: 'show images' <hotel name>"
         else:
@@ -65,9 +65,10 @@ class Bot:
             hotel_name += " "
             i += 1
         hotel_name += my_list[i]
-        hotel_images = Bot.get_photo_of_hotel(hotel_name)
-        for image in hotel_images:
-            Bot.send_photo(chat_id, image['photo_reference'])
+        hotel_image_url = Bot.get_photo_of_hotel(hotel_name)
+        Bot.send_photo(chat_id, hotel_image_url)
+        return True
+
 
     @staticmethod
     def show_help_menu(message, chat_id):
@@ -75,7 +76,6 @@ class Bot:
 
     @staticmethod
     def get_photo_of_hotel(hotel_name):
-        print(Bot.last_hotels)
         for hotel in Bot.last_hotels:
             if hotel.get('name') == hotel_name:
                 return SearchEngine.get_place_photos(hotel)
@@ -92,6 +92,4 @@ class Bot:
             response += " nearby"
             response += '\n'
         return response
-
-
 

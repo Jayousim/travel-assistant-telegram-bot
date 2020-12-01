@@ -1,7 +1,7 @@
 import requests
 
-TOKEN = '1425368104:AAGxzBKjlsnTkHi_SsonNSMK7eL_dfuqLFs'
-server_ip = 'https://6c383b5b420a.ngrok.io'
+TOKEN = '1465334834:AAFTxfNe4rR0lxx0TQnsuvgZNZzCIowLB_E'
+server_ip = 'https://76abed448dca.ngrok.io'
 TELEGRAM_INIT_WEBHOOK_URL = 'https://api.telegram.org/bot{}/setWebhook?url={}/message'.format(TOKEN, server_ip)
 
 requests.get(TELEGRAM_INIT_WEBHOOK_URL)

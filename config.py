@@ -1,7 +1,9 @@
-TOKEN = '1430412181:AAGwbUymswGwqMFWzV0QUeKskT_XAZudfWs'
-TELEGRAM_INIT_WEBHOOK_URL = 'https://api.telegram.org/bot{}/setWebhook?url=https://26ca739e1c4e.ngrok.io/message'.format(TOKEN)
-Api_Key = "AIzaSyBONgiulyX32tzphZd1Iti5VbfNpi5L_0k"
+import requests
 
+TOKEN = '1425368104:AAGxzBKjlsnTkHi_SsonNSMK7eL_dfuqLFs'
+server_ip = 'https://6c383b5b420a.ngrok.io'
+TELEGRAM_INIT_WEBHOOK_URL = 'https://api.telegram.org/bot{}/setWebhook?url={}/message'.format(TOKEN, server_ip)
 
+requests.get(TELEGRAM_INIT_WEBHOOK_URL)
 
-
+GOOGLE_KEY = "AIzaSyBONgiulyX32tzphZd1Iti5VbfNpi5L_0k"

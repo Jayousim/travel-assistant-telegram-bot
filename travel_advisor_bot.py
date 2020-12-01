@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from config import GOOGLE_KEY
 from database import *
 from config import TOKEN
 import requests
@@ -6,15 +7,11 @@ import emoji
 
 from model import SearchEngine
 send_message_req = "https://api.telegram.org/bot{}/sendMessage".format(TOKEN)
-send_photo_req = "https://api.telegram.org/bot{}/sendPhoto".format(TOKEN)
-
-
 
 @dataclass
 class Bot:
     engine = SearchEngine()
     last_hotels = []
-
 
     @staticmethod
     def send_message(chat_id, response):
@@ -23,15 +20,14 @@ class Bot:
 
     @staticmethod
     def send_photo(chat_id, response):
-        res = requests.get(send_photo_req + "?chat_id={}&text={}"
-                           .format(chat_id, response))
+        image_url = requests.get(response)
+        res = requests.get(send_message_req + "?chat_id={}&text={}".format(chat_id, image_url.url))
 
     @staticmethod
     def greet_the_user(chat_id):
         response = f"{emoji.emojize(':waving_hand:')} welcome to travel assistance\n\n " \
-                   f"provide me with your destination using the following format: 'travel to' <destination> "
+                   f"provide me with your destination using the following format: 'travel to' <destination>"
         Bot.send_message(chat_id, response)
-        return "success"
 
     @staticmethod
     def travel_destination(message, chat_id):
@@ -44,7 +40,6 @@ class Bot:
         else:
             response = "oops! you didn't specify a valid destination"
         Bot.send_message(chat_id, response)
-        return "success"
 
     @staticmethod
     def category(message, chat_id):
@@ -55,12 +50,10 @@ class Bot:
             hotels = Bot.return_relevant_hotels(destination, category)
 
             response = f"yay!! we found some relevant hotels here what we found:\n {hotels}\n\n" \
-                       f"to see the hotel images use this format: 'show images' <hotel name>"
-        
+                   f"to see the hotel images use this format: 'show images' <hotel name>"
         else:
             response = "not a valid syntax"
         Bot.send_message(chat_id, response)
-        return "success"
 
     @staticmethod
     def get_hotel_images(message, chat_id):
@@ -72,9 +65,10 @@ class Bot:
             hotel_name += " "
             i += 1
         hotel_name += my_list[i]
-        hotel_images = Bot.get_photo_of_hotel(hotel_name)
-        Bot.send_photo(chat_id, hotel_images)
+        hotel_image_url = Bot.get_photo_of_hotel(hotel_name)
+        Bot.send_photo(chat_id, hotel_image_url)
         return True
+
 
     @staticmethod
     def show_help_menu(message, chat_id):
@@ -82,7 +76,6 @@ class Bot:
 
     @staticmethod
     def get_photo_of_hotel(hotel_name):
-        print(Bot.last_hotels)
         for hotel in Bot.last_hotels:
             if hotel.get('name') == hotel_name:
                 return SearchEngine.get_place_photos(hotel)

@@ -21,4 +21,5 @@ def parse_command(message, chat_id):
         return commands['help menu'](message)
     elif "show images" in message:
         return commands['get images'](message, chat_id)
-    return "I didn't understand try again"
+    else:
+        Bot.send_message(chat_id, "i didn't understand try again")

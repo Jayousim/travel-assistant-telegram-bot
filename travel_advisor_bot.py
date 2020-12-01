@@ -28,8 +28,8 @@ class Bot:
         return "func1"
 
     @staticmethod
-    def return_relevant_hotels(destination, message):
-        found_hotels = SearchEngine.find_top_stays_with_type(destination, message)
+    def return_relevant_hotels(destination, category):
+        found_hotels = SearchEngine.find_top_stays_with_type(destination, category)
         response = ""
         for hotel, surrounding in found_hotels:
             response += hotel

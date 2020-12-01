@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from config import GOOGLE_KEY
-from database import *
+from database_connection import *
 from config import TOKEN
 import requests
 import emoji
+from ui import handle_message
 
 from model import SearchEngine
 send_message_req = "https://api.telegram.org/bot{}/sendMessage".format(TOKEN)
@@ -43,17 +43,7 @@ class Bot:
 
     @staticmethod
     def category(message, chat_id):
-        my_list = message.split()
-        if len(my_list) == 2:
-            category = my_list[1]
-            destination = get_previous_message(chat_id)
-            hotels = Bot.return_relevant_hotels(destination, category)
-
-            response = f"yay!! we found some relevant hotels here what we found:\n {hotels}\n\n" \
-                   f"to see the hotel images use this format: 'show images' <hotel name>"
-        else:
-            response = "not a valid syntax"
-        Bot.send_message(chat_id, response)
+        return handle_message()
 
     @staticmethod
     def get_hotel_images(message, chat_id):

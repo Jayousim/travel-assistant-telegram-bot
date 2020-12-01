@@ -1,4 +1,5 @@
-import mysql.connector
+# import mysql.connector
+import pymysql
 
 
 class Singleton:
@@ -20,24 +21,43 @@ class Singleton:
         return isinstance(inst, self._cls)
 
 
+destinations = "(chat_id INTEGER," \
+               "destination VARCHAR(64)," \
+               "category VARCHAR(64)," \
+               "hotel_name VARCHAR(64)," \
+               "activity_name VARCHAR(64)," \
+               "PRIMARY KEY(chat_id,destination,category,hotel_name,activity_name))"
+
+
 @Singleton
 class DBConnection(object):
 
     def __init__(self):
         self.my_db = None
         try:
-            self.my_db = mysql.connector.connect(
+            # self.my_db = mysql.connector.connect(
+            self.my_db = pymysql.connect(
                 host="localhost",
                 user="root",
-                password="1234",
-                database="sql_intro",
-                auth_plugin='mysql_native_password'
+                password="HelpAStudent7",
+                database="hackathon",
+                # auth_plugin='mysql_native_password'
             )
+            self.create_tables()
         except:
             print("error connecting to data base")
 
     def get_db(self):
         return self.my_db
+
+    def create_tables(self):
+        with self.my_db.cursor() as cursor:
+            query = f"DROP TABLE IF EXISTS destinations"
+            cursor.execute(query)
+            self.my_db.commit()
+            query = f"CREATE TABLE IF NOT EXISTS destinations {destinations}"
+            cursor.execute(query)
+            self.my_db.commit()
 
 
 def get_previous_message(chat_id):
@@ -68,4 +88,3 @@ def insert_new_message(chat_id, new_message):
         my_db.commit()
         print(my_cursor.rowcount, "record(s) affected")
         return "success"
-

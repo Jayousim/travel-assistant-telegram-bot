@@ -54,9 +54,8 @@ class Bot:
             destination = get_previous_message(chat_id)
             hotels = Bot.return_relevant_hotels(destination, category)
 
-
-            response =  f"yay!! we found some relevant hotels here what we found:\n {hotels}\n\n" \
-                   f"to see the hotel images use this format: 'show images' <hotel name>"
+            response = f"yay!! we found some relevant hotels here what we found:\n {hotels}\n\n" \
+                       f"to see the hotel images use this format: 'show images' <hotel name>"
         
         else:
             response = "not a valid syntax"
@@ -74,8 +73,8 @@ class Bot:
             i += 1
         hotel_name += my_list[i]
         hotel_images = Bot.get_photo_of_hotel(hotel_name)
-        for image in hotel_images:
-            return image
+        Bot.send_photo(chat_id, hotel_images)
+        return True
 
     @staticmethod
     def show_help_menu(message, chat_id):
@@ -100,6 +99,4 @@ class Bot:
             response += " nearby"
             response += '\n'
         return response
-
-
 

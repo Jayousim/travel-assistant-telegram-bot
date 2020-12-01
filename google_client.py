@@ -6,6 +6,7 @@ class GoogleApiInvoker:
     key = GOOGLE_KEY
     textsearch = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
     nearbysearch = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
+    place_search = ''
     radius = 100
     MAX_HOTELS = 5
 
@@ -15,7 +16,6 @@ class GoogleApiInvoker:
 
     @staticmethod
     def get_place_description(place):
-
         pass
 
     @staticmethod
@@ -36,7 +36,6 @@ class GoogleApiInvoker:
 
     @staticmethod
     def get_location_from_json(data):
-
         return data.get('geometry').get('location').get('lat'), data.get('geometry').get('location').get('lng')
 
     @staticmethod

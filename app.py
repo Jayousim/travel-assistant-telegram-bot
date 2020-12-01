@@ -3,6 +3,7 @@ from config import TELEGRAM_INIT_WEBHOOK_URL, TOKEN
 from command_parser import parse_command
 import requests
 
+
 app = Flask(__name__)
 
 

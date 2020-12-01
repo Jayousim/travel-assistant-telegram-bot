@@ -9,6 +9,7 @@ from model import SearchEngine
 @dataclass
 class Bot:
     engine = SearchEngine()
+    last_hotels = []
     @staticmethod
     def greet_the_user():
         return f"{emoji.emojize(':waving_hand:')} welcome to travel assistance\n\n " \
@@ -40,10 +41,15 @@ class Bot:
     def show_help_menu(message):
         return "func1"
 
+    @staticmethod
+    def get_photo_of_hotel(hotel_name):
+        for hotel in Bot.last_hotels:
+            if hotel.get('name') == hotel_name:
+                return SearchEngine.get_place_photos(hotel)
       
     @staticmethod
-    def return_relevant_hotels(destination, category):
-        found_hotels = SearchEngine.find_top_stays_with_type(destination, category)
+    def return_relevant_hotels(destination, category, last_hotels):
+        found_hotels, last_hotels = SearchEngine.find_top_stays_with_type(destination, category)
         response = ""
         for hotel, surrounding in found_hotels:
             response += hotel
@@ -53,5 +59,4 @@ class Bot:
             response += " nearby"
             response += '\n'
         return response
-
 

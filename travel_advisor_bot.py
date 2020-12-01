@@ -1,8 +1,9 @@
 from dataclasses import dataclass
-from database import *
+from database_connection import *
 from config import TOKEN
 import requests
 import emoji
+from ui import handle_message
 
 
 from model import SearchEngine
@@ -55,6 +56,7 @@ class Bot:
             response = f"yay we found some relevant hotels here what we found:\n {hotels}"
         else:
             response = "not a valid syntax"
+        return handle_message()
         Bot.send_message(chat_id, response)
         return "success"
 

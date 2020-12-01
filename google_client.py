@@ -1,5 +1,3 @@
-import time
-from flask import Flask, request
 import requests
 from config import GOOGLE_KEY
 
@@ -18,7 +16,6 @@ class GoogleApiInvoker:
 
     @staticmethod
     def get_place_description(place):
-
         pass
 
     @staticmethod

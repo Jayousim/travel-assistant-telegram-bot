@@ -4,16 +4,17 @@ from config import TOKEN
 import requests
 import emoji
 
-
 from model import SearchEngine
 send_message_req = "https://api.telegram.org/bot{}/sendMessage".format(TOKEN)
 send_photo_req = "https://api.telegram.org/bot{}/sendPhoto".format(TOKEN)
+
 
 
 @dataclass
 class Bot:
     engine = SearchEngine()
     last_hotels = []
+
 
     @staticmethod
     def send_message(chat_id, response):
@@ -52,11 +53,29 @@ class Bot:
             category = my_list[1]
             destination = get_previous_message(chat_id)
             hotels = Bot.return_relevant_hotels(destination, category)
-            response = f"yay we found some relevant hotels here what we found:\n {hotels}"
+
+
+            response =  f"yay!! we found some relevant hotels here what we found:\n {hotels}\n\n" \
+                   f"to see the hotel images use this format: 'show images' <hotel name>"
+        
         else:
             response = "not a valid syntax"
         Bot.send_message(chat_id, response)
         return "success"
+
+    @staticmethod
+    def get_hotel_images(message, chat_id):
+        my_list = message.split()
+        i = 2
+        hotel_name = ""
+        while i < len(my_list)-1:
+            hotel_name += my_list[i]
+            hotel_name += " "
+            i += 1
+        hotel_name += my_list[i]
+        hotel_images = Bot.get_photo_of_hotel(hotel_name)
+        for image in hotel_images:
+            return image
 
     @staticmethod
     def show_help_menu(message, chat_id):
@@ -64,13 +83,14 @@ class Bot:
 
     @staticmethod
     def get_photo_of_hotel(hotel_name):
+        print(Bot.last_hotels)
         for hotel in Bot.last_hotels:
             if hotel.get('name') == hotel_name:
                 return SearchEngine.get_place_photos(hotel)
-      
-    @staticmethod
-    def return_relevant_hotels(destination, category):
-        found_hotels, last_hotels = SearchEngine.find_top_stays_with_type(destination, category)
+
+    @classmethod
+    def return_relevant_hotels(cls, destination, category):
+        found_hotels, Bot.last_hotels = SearchEngine.find_top_stays_with_type(destination, category)
         response = ""
         for hotel, surrounding in found_hotels:
             response += hotel
@@ -80,4 +100,6 @@ class Bot:
             response += " nearby"
             response += '\n'
         return response
+
+
 

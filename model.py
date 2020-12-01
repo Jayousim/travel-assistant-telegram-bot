@@ -21,7 +21,6 @@ class SearchEngine:
 
     @staticmethod
     def get_street_photos(location):
-
         pass
 
     @staticmethod

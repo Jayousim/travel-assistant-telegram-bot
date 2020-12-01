@@ -15,6 +15,7 @@ class GoogleApiInvoker:
 
     @staticmethod
     def get_place_description(place):
+
         pass
 
     @staticmethod

@@ -1,9 +1,8 @@
 from dataclasses import dataclass
-from google_client import *
 from database import *
 import emoji
 from google_client import GoogleApiInvoker
-
+from telegram import InlineKeyboardButton
 
 @dataclass
 class Bot:
@@ -31,7 +30,8 @@ class Bot:
             category = my_list[1]
             destination = get_previous_message(chat_id)
             hotels = Bot.return_relevant_hotels(destination, category)
-            return f"yay we found some relevant hotels here what we found:\n {hotels}"
+
+            return f"yay!! we found some relevant hotels here what we found:\n {hotels}"
         else:
             return "not a valid syntax"
 
@@ -47,3 +47,5 @@ class Bot:
             hotels_activities.append([hotel.get('name'), GoogleApiInvoker.get_activities_by_hotel(hotel, category)])
         hotels_activities = sorted(hotels_activities, key=lambda item_: len(item_[1]), reverse=True)
         return [temp[0] for temp in hotels_activities[:GoogleApiInvoker.MAX_HOTELS]]
+
+

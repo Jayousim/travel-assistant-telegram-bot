@@ -18,9 +18,12 @@ def handle_message():
     message = request.get_json()['message']['text']
     response = parse_command(message, chat_id)
 
+
     res = requests.get("https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}"
-                 .format(TOKEN, chat_id, response))
+                .format(TOKEN, chat_id, response))
     return Response("success")
+
+
 
 
 if __name__ == '__main__':

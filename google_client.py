@@ -1,5 +1,3 @@
-import time
-from flask import Flask, request
 import requests
 from config import GOOGLE_KEY
 

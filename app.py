@@ -13,13 +13,15 @@ def sanity():
 
 @app.route('/message', methods=["POST"])
 def handle_message():
-    print("got message" + request.get_json()['message']['text'])
+    print("got message" + " " + request.get_json()['message']['text'])
     chat_id = request.get_json()['message']['chat']['id']
     message = request.get_json()['message']['text']
+
     response = parse_command(message, chat_id)
 
-    res = requests.get("https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}"
-                 .format(TOKEN, chat_id, response))
+    # res = requests.get("https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}"
+    #              .format(TOKEN, chat_id, response))
+
     return Response("success", 200)
 
 

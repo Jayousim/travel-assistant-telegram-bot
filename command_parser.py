@@ -11,7 +11,7 @@ commands = {
 
 def parse_command(message, chat_id):
     if "start" in message:
-        return commands['greet the user']()
+        return commands['greet the user'](chat_id)
     elif "travel to" in message:
         return commands['travel destination'](message, chat_id)
     elif "category" in message:

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from google_client import *
 from database import *
 import emoji
 
@@ -50,7 +49,7 @@ class Bot:
             response += hotel
             response += "which has "
             response += str(surrounding)
-            response += " " + ' '.join(message.split()[1::])
+            response += " " + category
             response += " nearby"
             response += '\n'
         return response

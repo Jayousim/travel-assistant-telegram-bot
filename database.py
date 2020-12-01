@@ -30,7 +30,8 @@ class DBConnection(object):
                 host="localhost",
                 user="root",
                 password="1234",
-                database="sql_intro"
+                database="sql_intro",
+                auth_plugin='mysql_native_password'
             )
         except:
             print("error connecting to data base")
@@ -40,23 +41,31 @@ class DBConnection(object):
 
 
 def get_previous_message(chat_id):
-    my_cursor = DBConnection.Instance().get_db().cursor()
-    my_cursor.execute(f"SELECT previous_message FROM Users where chat_id = {chat_id}")
-    my_result = my_cursor.fetchall()
+    my_db = DBConnection.Instance().get_db()
+    cur = my_db.cursor()
+    cur.execute(f"SELECT previous_message FROM Users where chat_id = {chat_id}")
+    my_result = cur.fetchall()
     return my_result
 
 
-def insert_new_message(chat_id, message):
+def insert_new_message(chat_id, new_message):
     my_db = DBConnection.Instance().get_db()
     my_cursor = my_db.cursor()
 
-    sql = "INSERT INTO Users (chat_id, previous_message) VALUES (%s, %s)"
-    val = (chat_id, message)
-    my_cursor.execute(sql, val)
+    message = get_previous_message(chat_id)
+    if len(message) == 0:
+        sql = "INSERT INTO Users (chat_id, previous_message) VALUES (%s, %s)"
+        val = (chat_id, new_message)
+        my_cursor.execute(sql, val)
 
-    my_db.commit()
-    print(my_cursor.rowcount, "record inserted.")
-    return
+        my_db.commit()
+        print(my_cursor.rowcount, "record inserted.")
+        return "success"
+    else:
+        sql = "UPDATE Users SET previous_message = %s WHERE chat_id = %s"
+        val = (new_message, chat_id)
+        my_cursor.execute(sql, val)
+        my_db.commit()
+        print(my_cursor.rowcount, "record(s) affected")
+        return "success"
 
-#insert_new_message(12, "cool")
-get_previous_message(12)

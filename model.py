@@ -28,6 +28,7 @@ class SearchEngine:
     def get_place_photos_from_reference(reference):
         return GoogleApiInvoker.get_place_photos(reference)
 
+
     @staticmethod
     def get_street_photos(location):
         pass
@@ -35,4 +36,11 @@ class SearchEngine:
     @staticmethod
     def get_place_description(place):
         pass
+
+    @classmethod
+    def get_website_by_place_id(cls, place_id):
+        return GoogleApiInvoker.get_website_by_place_id(place_id)
+
+
+
 

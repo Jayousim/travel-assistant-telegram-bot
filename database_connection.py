@@ -26,7 +26,8 @@ destinations = "(chat_id INTEGER," \
                "category VARCHAR(64)," \
                "hotel_name VARCHAR(64)," \
                "activity_name VARCHAR(64)," \
-               "PRIMARY KEY(chat_id,destination,category,hotel_name,activity_name))"
+               "activity_url VARCHAR(500)," \
+               "PRIMARY KEY(chat_id,destination,category,hotel_name,activity_name, activity_url))"
 
 
 @Singleton
@@ -52,12 +53,15 @@ class DBConnection(object):
 
     def create_tables(self):
         with self.my_db.cursor() as cursor:
+            print("create table begin")
             query = f"DROP TABLE IF EXISTS destinations"
             cursor.execute(query)
             self.my_db.commit()
             query = f"CREATE TABLE IF NOT EXISTS destinations {destinations}"
             cursor.execute(query)
             self.my_db.commit()
+            print("create table end")
+
 
 
 mycursor = DBConnection.Instance().get_db().cursor()

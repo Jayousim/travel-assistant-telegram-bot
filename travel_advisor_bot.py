@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from database_connection import *
-from config import TOKEN
+from config import TOKEN, GOOGLE_KEY
 import requests
 import emoji
 from ui import handle_message
+import json
 
 from model import SearchEngine
 send_message_req = "https://api.telegram.org/bot{}/sendMessage".format(TOKEN)
@@ -31,7 +32,8 @@ class Bot:
     @staticmethod
     def travel_destination(message, chat_id):
         response = f"{message}! great choice!! {emoji.emojize(':grinning_face_with_big_eyes:')}" \
-                   f"\n\n what would you like to be close by your hotel?\n"
+                   f"\n\n what category of places would you like to have nearby your hotel?\n\n" \
+                   f"something like parks, restaurants, etc.."
         Bot.send_message(chat_id, response)
 
     @staticmethod
@@ -57,6 +59,22 @@ class Bot:
         Bot.send_photo(chat_id, hotel_image_url)
         return True
 
+    @staticmethod
+    def get_hotel_link(message, chat_id):
+        my_list = message.split()
+        i = 2
+        hotel_name = ""
+        while i < len(my_list)-1:
+            hotel_name += my_list[i]
+            hotel_name += " "
+            i += 1
+        hotel_name += my_list[i]
+        website = Bot.get_website_of_hotel(hotel_name)
+        cool = f"that's easy here you go {emoji.emojize(':grinning_face_with_big_eyes:')}\n "
+        cool += website
+        Bot.send_message(chat_id, cool)
+        return True
+
 
     @staticmethod
     def show_help_menu(message, chat_id):
@@ -67,6 +85,13 @@ class Bot:
         for hotel in Bot.last_hotels:
             if hotel.get('name') == hotel_name:
                 return SearchEngine.get_place_photos(hotel)
+
+    @staticmethod
+    def get_website_of_hotel(hotel_name):
+        for hotel in Bot.last_hotels:
+            if hotel.get('name') == hotel_name:
+                return SearchEngine.get_website_by_place_id(hotel.get('place_id'))
+
 
     @classmethod
     def return_relevant_hotels(cls, destination, category):

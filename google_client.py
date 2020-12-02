@@ -63,3 +63,9 @@ class GoogleApiInvoker:
         current_results = ans.get("results")
         #current_results += GoogleApiInvoker.get_next_activities(ans.get('next_page_token'))
         return [item.get('name') for item in current_results]
+
+    @staticmethod
+    def get_website_by_place_id(place_id):
+        place_details = requests.get(f"https://maps.googleapis.com/maps/api/place/details/json?place_id={place_id}&fields=name,rating,formatted_phone_number,website&key={GOOGLE_KEY}").json()
+        return place_details['result']['website']
+

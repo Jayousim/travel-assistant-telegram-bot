@@ -40,8 +40,8 @@ class Bot:
     def category(category, chat_id):
         destination = get_message(chat_id)[0][0]
         Bot.return_relevant_hotels(destination, category)
-        ##hotels_names = [hotel.get("name") for hotel in Bot.last_hotels]
-        for i, hotel in enumerate(Bot.last_hotels):
+        hotels_names = [hotel.get("name") for hotel in Bot.last_hotels]
+        for i, hotel in enumerate(hotels_names):
             Bot.hotels_order[i] = hotel
         return handle_message()
 
@@ -104,7 +104,7 @@ class Bot:
         Bot.last_hotels = [hotel[0] for hotel in found_hotels]
         response = ""
         for hotel, surrounding in found_hotels:
-            response += hotel
+            response += hotel.get("name")
             response += "which has "
             response += str(surrounding)
             response += " " + category

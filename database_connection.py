@@ -26,7 +26,8 @@ destinations = "(chat_id INTEGER," \
                "category VARCHAR(64)," \
                "hotel_name VARCHAR(64)," \
                "activity_name VARCHAR(64)," \
-               "PRIMARY KEY(chat_id,destination,category,hotel_name,activity_name))"
+               "activity_url VARCHAR(500)," \
+               "PRIMARY KEY(chat_id,destination,category,hotel_name,activity_name, activity_url))"
 
 
 @Singleton
@@ -43,7 +44,7 @@ class DBConnection(object):
                 database="hackathon",
                 # auth_plugin='mysql_native_password'
             )
-            #self.create_tables()
+            self.create_tables()
         except:
             print("error connecting to data base")
 
@@ -52,12 +53,15 @@ class DBConnection(object):
 
     def create_tables(self):
         with self.my_db.cursor() as cursor:
+            print("create table begin")
             query = f"DROP TABLE IF EXISTS destinations"
             cursor.execute(query)
             self.my_db.commit()
             query = f"CREATE TABLE IF NOT EXISTS destinations {destinations}"
             cursor.execute(query)
             self.my_db.commit()
+            print("create table end")
+
 
 
 def get_previous_message(chat_id):

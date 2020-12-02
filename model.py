@@ -22,6 +22,10 @@ class SearchEngine:
         photos_info = location.get('photos')[0]
         return GoogleApiInvoker.get_place_photos(photos_info['photo_reference'])
 
+    @staticmethod
+    def get_place_photos_from_reference(reference):
+        return GoogleApiInvoker.get_place_photos(reference)
+
 
 
     @staticmethod

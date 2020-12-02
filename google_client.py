@@ -62,4 +62,4 @@ class GoogleApiInvoker:
             f"&radius={GoogleApiInvoker.radius}&keyword={activity}").json()
         current_results = ans.get("results")
         #current_results += GoogleApiInvoker.get_next_activities(ans.get('next_page_token'))
-        return [item.get('name') for item in current_results]
+        return [(item.get('name'),item.get('photos', [{'photo_reference':None}])[0].get('photo_reference')) for item in current_results]

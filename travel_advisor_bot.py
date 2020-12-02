@@ -75,7 +75,6 @@ class Bot:
 
     @staticmethod
     def get_photo_of_hotel(hotel_name):
-        print(Bot.last_hotels)
         for hotel in Bot.last_hotels:
             if hotel.get('name') == hotel_name:
                 return SearchEngine.get_place_photos(hotel)

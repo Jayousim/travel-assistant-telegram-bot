@@ -43,6 +43,11 @@ class Bot:
 
     @staticmethod
     def category(message, chat_id):
+        my_list = message.split()
+        if len(my_list) == 2:
+            category = my_list[1]
+            destination = get_previous_message(chat_id)
+            hotels = Bot.return_relevant_hotels(destination, category)
         return handle_message()
 
     @staticmethod

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from config import GOOGLE_KEY
-from database import *
+from database_connection import *
 from config import TOKEN
 import requests
 import emoji
+from ui import handle_message
 
 from model import SearchEngine
 send_message_req = "https://api.telegram.org/bot{}/sendMessage".format(TOKEN)
@@ -20,40 +20,26 @@ class Bot:
 
     @staticmethod
     def send_photo(chat_id, response):
-        image_url = requests.get('https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=' + response + '&key=' + GOOGLE_KEY)
-        res = requests.get(send_message_req + "?chat_id={}&text={}"
-                           .format(chat_id, image_url.url))
+        image_url = requests.get(response)
+        res = requests.get(send_message_req + "?chat_id={}&text={}".format(chat_id, image_url.url))
 
     @staticmethod
     def greet_the_user(chat_id):
-        response = f"{emoji.emojize(':waving_hand:')} welcome to travel assistance\n\n " \
-                   f"provide me with your destination using the following format: 'travel to' <destination>"
+        response = f"{emoji.emojize(':waving_hand:')} welcome! iam Trevo the travel assistant\n\n " \
+                   f"provide me with your destination"
         Bot.send_message(chat_id, response)
 
     @staticmethod
     def travel_destination(message, chat_id):
-        my_list = message.split()
-        insert_new_message(chat_id, my_list[2])
-        if len(my_list) == 3:
-            response = f"{my_list[2]}! great choice!! {emoji.emojize(':grinning_face_with_big_eyes:')}" \
-                       f"\n\n now please specify your favorable attractions and activities " \
-                       f"using the following format: 'category' <category>"
-        else:
-            response = "oops! you didn't specify a valid destination"
+        response = f"{message}! great choice!! {emoji.emojize(':grinning_face_with_big_eyes:')}" \
+                   f"\n\n what would you like to be close by your hotel?\n" \
+
         Bot.send_message(chat_id, response)
 
     @staticmethod
     def category(message, chat_id):
         my_list = message.split()
-        if len(my_list) == 2:
-            category = my_list[1]
-            destination = get_previous_message(chat_id)
-            hotels = Bot.return_relevant_hotels(destination, category)
-            response = f"yay!! we found some relevant hotels here what we found:\n {hotels}\n\n" \
-                   f"to see the hotel images use this format: 'show images' <hotel name>"
-        else:
-            response = "not a valid syntax"
-        Bot.send_message(chat_id, response)
+        return handle_message()
 
     @staticmethod
     def get_hotel_images(message, chat_id):
@@ -65,9 +51,10 @@ class Bot:
             hotel_name += " "
             i += 1
         hotel_name += my_list[i]
-        hotel_images = Bot.get_photo_of_hotel(hotel_name)
-        for image in hotel_images:
-            Bot.send_photo(chat_id, image['photo_reference'])
+        hotel_image_url = Bot.get_photo_of_hotel(hotel_name)
+        Bot.send_photo(chat_id, hotel_image_url)
+        return True
+
 
     @staticmethod
     def show_help_menu(message, chat_id):
@@ -91,6 +78,4 @@ class Bot:
             response += " nearby"
             response += '\n'
         return response
-
-
 

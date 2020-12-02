@@ -10,10 +10,10 @@ giphy_api_key = '7zuDeZ3gqSF0rmJpkOai7b625nmYgOfO'
 app = Flask(__name__)
 
 g_counter = 0
-def set_hotel_button(hotel_name):
+def set_hotel_button(hotel_name, length):
     global g_counter
     g_counter += 1
-    return [telegram.InlineKeyboardButton(str(g_counter) + ' - ' + hotel_name, callback_data=hotel_name)]
+    return [telegram.InlineKeyboardButton(str(g_counter) + '. ' + hotel_name + ' - found ' + str(length), callback_data=hotel_name)]
 
 
 def get_next_activity(activity, activities):
@@ -46,7 +46,7 @@ def set_activity_buttons(activity, hotel):
 def show_only_hotels_buttons(chat_id, hotel_names, destination):
     requests.get("https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}"
                  .format(TOKEN, chat_id, "Yay!! Look what I found for you in " + destination))
-    keyboard = [set_hotel_button(hotel_name) for hotel_name in hotel_names]
+    keyboard = [set_hotel_button(hotel_name, len(hotel_names.get(hotel_name))) for hotel_name in hotel_names.keys()]
     reply_markup = telegram.InlineKeyboardMarkup(keyboard)
     print(reply_markup)
     temp = json.dumps(reply_markup.to_dict())
@@ -70,13 +70,13 @@ def show_first_activity(chat_id, message_id, data, chosen_hotel, activity):
     print("photo ", photo)
     keyboard = []
     for hotel in data.keys():
-        keyboard.append(set_hotel_button(hotel))
+        keyboard.append(set_hotel_button(hotel, len(data.get(hotel))))
     keyboard.insert(0, set_activity_buttons(activity, chosen_hotel))
     reply_markup = telegram.InlineKeyboardMarkup(keyboard)
     telegram.Bot(TOKEN).editMessageMedia(chat_id, message_id,media=telegram.InputMediaPhoto(photo, caption=activity), reply_markup=reply_markup)
     return Response("success")
 
-@app.route('/message', methods=["POST"])
+#@app.route('/message', methods=["POST"])
 def handle_message():
     #return Response('s')
     global g_counter
@@ -108,7 +108,7 @@ def handle_message():
             return show_first_activity(chat_id, message_id, data, hotel, activity)
         activity = data[callback_message][0]
         return show_first_activity(chat_id, message_id, data, callback_message, activity)
-    return show_only_hotels_buttons(chat_id, data.keys(), destination)
+    return show_only_hotels_buttons(chat_id, data, destination)
 
 
 

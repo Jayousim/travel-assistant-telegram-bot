@@ -44,7 +44,7 @@ class DBConnection(object):
                 database="hackathon",
                 #auth_plugin='mysql_native_password'
             )
-            #self.create_tables()
+            self.create_tables()
         except:
             print("error connecting to data base")
 

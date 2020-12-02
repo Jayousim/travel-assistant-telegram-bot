@@ -40,8 +40,8 @@ class Bot:
     def category(category, chat_id):
         destination = get_message(chat_id)[0][0]
         Bot.return_relevant_hotels(destination, category)
-        hotels_names = [hotel.get("name") for hotel in Bot.last_hotels]
-        for i, hotel in enumerate(hotels_names):
+        ##hotels_names = [hotel.get("name") for hotel in Bot.last_hotels]
+        for i, hotel in enumerate(Bot.last_hotels):
             Bot.hotels_order[i] = hotel
         return handle_message()
 
@@ -87,10 +87,15 @@ class Bot:
                 return SearchEngine.get_place_photos(hotel)
 
     @staticmethod
+    def get_photo_of_hotel_by_menu_number(number):
+        return Bot.get_photo_of_hotel(Bot.hotels_order[number])
+
+    @staticmethod
     def get_website_of_hotel(hotel_name):
         for hotel in Bot.last_hotels:
             if hotel.get('name') == hotel_name:
-                return SearchEngine.get_website_by_place_id(hotel.get('place_id'))
+                res = SearchEngine.get_website_by_place_id(hotel.get('place_id'))
+                return res
 
 
     @classmethod

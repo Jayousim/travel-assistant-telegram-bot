@@ -64,9 +64,9 @@ class DBConnection(object):
 
 
 
-mycursor = DBConnection.Instance().get_db().cursor()
-mycursor.execute("drop TABLE Users")
-mycursor.execute("CREATE TABLE Users (chat_id int not null primary key,status smallint not null, message varchar(50))")
+#mycursor = DBConnection.Instance().get_db().cursor()
+#mycursor.execute("drop TABLE Users")
+#mycursor.execute("CREATE TABLE Users (chat_id int not null primary key,status smallint not null, message varchar(50))")
 
 
 def get_status(chat_id):

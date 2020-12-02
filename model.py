@@ -8,9 +8,8 @@ class SearchEngine:
         hotels_activities = []
         for hotel in hotels:
             hotels_activities.append(
-                [hotel, GoogleApiInvoker.get_activities_by_hotel(hotel, activity_type)])
+                [hotel.get('name'), GoogleApiInvoker.get_activities_by_hotel(hotel, activity_type)])
         hotels_activities = sorted(hotels_activities, key=lambda item_: len(item_[1]), reverse=True)
-        print(hotels_activities)
         insert_data(hotels_activities[:GoogleApiInvoker.MAX_HOTELS], destination, activity_type)
         return [(temp[0], len(temp[1])) for temp in hotels_activities[:GoogleApiInvoker.MAX_HOTELS]]
 

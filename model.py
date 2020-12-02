@@ -16,6 +16,7 @@ class SearchEngine:
         pass
 
     @staticmethod
+    # gets the url query of photos
     def get_place_photos(location):
         photos_info = location.get('photos')[0]
         return GoogleApiInvoker.get_place_photos(photos_info['photo_reference'])

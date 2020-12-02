@@ -1,16 +1,9 @@
 from flask import Flask, Response, request
-from config import TOKEN
 from command_parser import parse_command
-import requests
 import ui
-
 
 app = Flask(__name__)
 
-
-@app.route('/sanity')
-def sanity():
-    return "Server is running"
 
 @app.route('/message', methods=["POST"])
 def handle_message():

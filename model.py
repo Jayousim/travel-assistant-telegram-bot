@@ -17,7 +17,9 @@ class SearchEngine:
     def get_more_hotels_neraby(self):
         pass
 
+
     @staticmethod
+    # gets the url query of photos
     def get_place_photos(location):
         photos_info = location.get('photos')[0]
         return GoogleApiInvoker.get_place_photos(photos_info['photo_reference'])
@@ -25,7 +27,6 @@ class SearchEngine:
     @staticmethod
     def get_place_photos_from_reference(reference):
         return GoogleApiInvoker.get_place_photos(reference)
-
 
 
     @staticmethod

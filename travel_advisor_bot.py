@@ -19,35 +19,25 @@ class Bot:
                            .format(chat_id, response))
 
     @staticmethod
-    def send_photo(chat_id, response):
-        image_url = requests.get(response)
-        res = requests.get(send_message_req + "?chat_id={}&text={}".format(chat_id, image_url.url))
+    def send_photo(chat_id, image_url):
+        requests.get(send_message_req + "?chat_id={}&text={}".format(chat_id, image_url.url))
 
     @staticmethod
     def greet_the_user(chat_id):
-        response = f"{emoji.emojize(':waving_hand:')} welcome to travel assistance\n\n " \
-                   f"provide me with your destination using the following format: 'travel to' <destination>"
+        response = f"{emoji.emojize(':waving_hand:')} welcome! iam Trevo the travel assistant\n\n " \
+                   f"provide me with your destination"
         Bot.send_message(chat_id, response)
 
     @staticmethod
     def travel_destination(message, chat_id):
-        my_list = message.split()
-        insert_new_message(chat_id, my_list[2])
-        if len(my_list) == 3:
-            response = f"{my_list[2]}! great choice!! {emoji.emojize(':grinning_face_with_big_eyes:')}" \
-                       f"\n\n now please specify your favorable attractions and activities " \
-                       f"using the following format: 'category' <category>"
-        else:
-            response = "oops! you didn't specify a valid destination"
+        response = f"{message}! great choice!! {emoji.emojize(':grinning_face_with_big_eyes:')}" \
+                   f"\n\n what would you like to be close by your hotel?\n"
         Bot.send_message(chat_id, response)
 
     @staticmethod
-    def category(message, chat_id):
-        my_list = message.split()
-        if len(my_list) == 2:
-            category = my_list[1]
-            destination = get_previous_message(chat_id)
-            hotels = Bot.return_relevant_hotels(destination, category)
+    def category(category, chat_id):
+        destination = get_message(chat_id)[0][0]
+        hotels = Bot.return_relevant_hotels(destination, category)
         return handle_message()
 
     @staticmethod

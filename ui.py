@@ -15,7 +15,7 @@ def set_hotel_button(hotel_name):
 
 def get_next_activity(activity, activities):
     index = activities.index(activity)
-    if index >= len(activities):
+    if index >= (len(activities) - 1):
         return activity
     return activities[index + 1]
 

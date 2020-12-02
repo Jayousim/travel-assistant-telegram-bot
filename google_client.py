@@ -15,7 +15,7 @@ class GoogleApiInvoker:
         photo_query = reference
         maxwidth = "maxwidth=400"
         maxheight  = "maxheight=400"
-        ans = f"{GoogleApiInvoker.photo_request}{maxwidth}&{maxheight}&key={GoogleApiInvoker.key}&photoreference={photo_query}"
+        ans = requests.get(f"{GoogleApiInvoker.photo_request}{maxwidth}&{maxheight}&key={GoogleApiInvoker.key}&photoreference={photo_query}")
         return ans
 
     @staticmethod

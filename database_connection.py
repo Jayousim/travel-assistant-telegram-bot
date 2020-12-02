@@ -1,4 +1,4 @@
-import mysql.connector
+#import mysql.connector
 import pymysql
 
 
@@ -40,11 +40,11 @@ class DBConnection(object):
             self.my_db = pymysql.connect(
                 host="localhost",
                 user="root",
-                password="1234",
-                database="sql_intro",
+                password="HelpAStudent7",
+                database="hackathon",
                 #auth_plugin='mysql_native_password'
             )
-            self.create_tables()
+            #self.create_tables()
         except:
             print("error connecting to data base")
 

@@ -6,7 +6,8 @@ commands = {
     'travel destination':   Bot.travel_destination,
     'category':             Bot.category,
     'help menu':            Bot.show_help_menu,
-    'get images':           Bot.get_hotel_images
+    'get images':           Bot.get_hotel_images,
+    'get website':          Bot.get_hotel_link
 }
 
 
@@ -31,5 +32,8 @@ def parse_command(message, chat_id):
 
         elif "image" in message:
             return commands['get images'](message, chat_id)
+
+        elif "website" in message:
+            return commands['get website'](message, chat_id)
     else:
         Bot.send_message(chat_id, "i didn't understand try again")

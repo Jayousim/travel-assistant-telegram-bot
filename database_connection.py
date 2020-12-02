@@ -41,7 +41,6 @@ class DBConnection(object):
                 user="root",
                 password="1234",
                 database="sql_intro",
-
                 #auth_plugin='mysql_native_password'
             )
             self.create_tables()
@@ -61,10 +60,9 @@ class DBConnection(object):
             self.my_db.commit()
 
 
-#mycursor = DBConnection.Instance().get_db().cursor()
-#mycursor.execute("drop TABLE Status")
-#mycursor.execute("CREATE TABLE Users (chat_id int not null primary key,status smallint not null, message varchar(50))")
-
+mycursor = DBConnection.Instance().get_db().cursor()
+mycursor.execute("drop TABLE Users")
+mycursor.execute("CREATE TABLE Users (chat_id int not null primary key,status smallint not null, message varchar(50))")
 
 
 

@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/message', methods=["POST"])
 def handle_message():
-
+    #return Response("ack")
     if request.get_json().get('callback_query'):
         ui.handle_message()
         return Response('success')

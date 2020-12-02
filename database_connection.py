@@ -1,4 +1,4 @@
-import mysql.connector
+# import mysql.connector
 import pymysql
 
 
@@ -65,10 +65,8 @@ class DBConnection(object):
 
 
 #mycursor = DBConnection.Instance().get_db().cursor()
-#mycursor.execute("drop TABLE Status")
+#mycursor.execute("drop TABLE Users")
 #mycursor.execute("CREATE TABLE Users (chat_id int not null primary key,status smallint not null, message varchar(50))")
-
-
 
 
 def get_status(chat_id):
@@ -77,6 +75,7 @@ def get_status(chat_id):
     cur.execute(f"SELECT status FROM Users where chat_id = {chat_id}")
     my_result = cur.fetchall()
     return my_result
+
 
 def get_message(chat_id):
     my_db = DBConnection.Instance().get_db()

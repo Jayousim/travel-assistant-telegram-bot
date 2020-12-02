@@ -13,7 +13,7 @@ send_message_req = "https://api.telegram.org/bot{}/sendMessage".format(TOKEN)
 class Bot:
     engine = SearchEngine()
     last_hotels = []
-
+    hotels_order = {}
     @staticmethod
     def send_message(chat_id, response):
         res = requests.get(send_message_req + "?chat_id={}&text={}"
@@ -39,7 +39,10 @@ class Bot:
     @staticmethod
     def category(category, chat_id):
         destination = get_message(chat_id)[0][0]
-        hotels = Bot.return_relevant_hotels(destination, category)
+        Bot.return_relevant_hotels(destination, category)
+        ##hotels_names = [hotel.get("name") for hotel in Bot.last_hotels]
+        for i, hotel in enumerate(Bot.last_hotels):
+            Bot.hotels_order[i] = hotel
         return handle_message()
 
     @staticmethod
@@ -84,15 +87,21 @@ class Bot:
                 return SearchEngine.get_place_photos(hotel)
 
     @staticmethod
+    def get_photo_of_hotel_by_menu_number(number):
+        return Bot.get_photo_of_hotel(Bot.hotels_order[number])
+
+    @staticmethod
     def get_website_of_hotel(hotel_name):
         for hotel in Bot.last_hotels:
             if hotel.get('name') == hotel_name:
-                return SearchEngine.get_website_by_place_id(hotel.get('place_id'))
+                res = SearchEngine.get_website_by_place_id(hotel.get('place_id'))
+                return res
 
 
     @classmethod
     def return_relevant_hotels(cls, destination, category):
-        found_hotels, Bot.last_hotels = SearchEngine.find_top_stays_with_type(destination, category)
+        found_hotels = SearchEngine.find_top_stays_with_type(destination, category)
+        Bot.last_hotels = [hotel[0] for hotel in found_hotels]
         response = ""
         for hotel, surrounding in found_hotels:
             response += hotel

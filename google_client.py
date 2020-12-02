@@ -14,7 +14,7 @@ class GoogleApiInvoker:
     def get_place_photos(reference):
         photo_query = reference
         maxwidth = "maxwidth=400"
-        maxheight  = "maxheight=400"
+        maxheight = "maxheight=400"
         ans = requests.get(f"{GoogleApiInvoker.photo_request}{maxwidth}&{maxheight}&key={GoogleApiInvoker.key}&photoreference={photo_query}")
         return ans
 

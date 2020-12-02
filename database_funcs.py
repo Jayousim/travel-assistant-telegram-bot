@@ -9,7 +9,7 @@ def insert_data(hotels_activities, destination, activity_type):
         for activity in item[1]:
             with DBConnection.Instance().get_db().cursor() as cursor:
                 query = f'INSERT INTO destinations (chat_id, destination, category, hotel_name, activity_name, activity_url) ' \
-                        f'VALUES ({chat_id}, "{destination[0][0]}", "{activity_type}", "{item[0]}", "{activity[0][:45]}", "{activity[1]}") '
+                        f'VALUES ({chat_id}, "{destination}", "{activity_type}", "{item[0]}", "{activity[0][:45]}", "{activity[1]}")'
                 cursor.execute(query)
                 DBConnection.Instance().get_db().commit()
 

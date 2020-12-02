@@ -20,9 +20,8 @@ class Bot:
                            .format(chat_id, response))
 
     @staticmethod
-    def send_photo(chat_id, response):
-        image_url = requests.get(response)
-        res = requests.get(send_message_req + "?chat_id={}&text={}".format(chat_id, image_url.url))
+    def send_photo(chat_id, image_url):
+        requests.get(send_message_req + "?chat_id={}&text={}".format(chat_id, image_url.url))
 
     @staticmethod
     def greet_the_user(chat_id):

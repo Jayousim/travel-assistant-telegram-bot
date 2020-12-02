@@ -3,8 +3,9 @@ from config import TOKEN
 import telegram
 from flask import Flask, Response, request
 import json
-from database_funcs import get_data_for_buttons
-
+from database_funcs import *
+from model import SearchEngine
+giphy_api_key = '7zuDeZ3gqSF0rmJpkOai7b625nmYgOfO'
 
 app = Flask(__name__)
 
@@ -15,7 +16,7 @@ def set_hotel_button(hotel_name):
 
 def get_next_activity(activity, activities):
     index = activities.index(activity)
-    if index >= len(activities):
+    if index >= len(activities) - 1:
         return activity
     return activities[index + 1]
 
@@ -34,30 +35,39 @@ def set_activity_buttons(activity, hotel):
     ]
 
 
-def show_only_hotels_buttons(chat_id, hotel_names):
+def show_only_hotels_buttons(chat_id, hotel_names, destination):
+    requests.get("https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}"
+                 .format(TOKEN, chat_id, "Yay!! Look what I found for you in " + destination))
     keyboard = [set_hotel_button(hotel_name) for hotel_name in hotel_names]
     reply_markup = telegram.InlineKeyboardMarkup(keyboard)
     print(reply_markup)
     temp = json.dumps(reply_markup.to_dict())
     print("temp: ", temp)
-    requests.get("https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}&reply_markup={}"
-                 .format(TOKEN, chat_id, "msg", temp))
+    gif = requests.get(f"https://api.giphy.com/v1/gifs/search?api_key={giphy_api_key}&q={destination + ' city'}&limit=1").json().get('data')[0].get('images').get('original').get('url')
+
+    requests.get("https://api.telegram.org/bot{}/sendAnimation?chat_id={}&animation={}&reply_markup={}"
+                 .format(TOKEN, chat_id, gif, temp))
+
     return Response("successful")
 
 
 def show_first_activity(chat_id, message_id, data, chosen_hotel, activity):
+    photo = get_photo_ref(activity)[0]
+    print("photo ", photo)
+    if not photo:
+        photo = 'https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png'
+    else:
+        photo = SearchEngine.get_place_photos_from_reference(photo)
+    print("photo ", photo)
     keyboard = []
     for hotel in data.keys():
         keyboard.append(set_hotel_button(hotel))
     keyboard.insert(0, set_activity_buttons(activity, chosen_hotel))
     reply_markup = telegram.InlineKeyboardMarkup(keyboard)
-    temp = json.dumps(reply_markup.to_dict())
-    requests.get("https://api.telegram.org/bot{}/editMessageText?chat_id={}&message_id={}"
-                 "&text={}&reply_markup={}"
-                 .format(TOKEN, chat_id, message_id, activity + "\nHERE ACTIVITY DESCRIPTION", temp))
+    telegram.Bot(TOKEN).editMessageMedia(chat_id, message_id,media=telegram.InputMediaPhoto(photo, caption=activity), reply_markup=reply_markup)
     return Response("success")
 
-@app.route('/message', methods=["POST"])
+#@app.route('/message', methods=["POST"])
 def handle_message():
     #return Response('s')
     print("got message")
@@ -71,7 +81,7 @@ def handle_message():
         message_id = None
         callback_message = None
 
-    data = get_data_for_buttons(chat_id)
+    data, destination = get_data_for_buttons(chat_id)
     if callback_message:
         if callback_message.startswith('previous'):
             hotel = callback_message.split('!')[2]
@@ -83,6 +93,10 @@ def handle_message():
             return show_first_activity(chat_id, message_id, data, hotel, activity)
         activity = data[callback_message][0]
         return show_first_activity(chat_id, message_id, data, callback_message, activity)
-    return show_only_hotels_buttons(chat_id, data.keys())
+    return show_only_hotels_buttons(chat_id, data.keys(), destination)
 
+
+
+if __name__ == '__main__':
+    app.run(port=5002, threaded=True)
 

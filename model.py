@@ -1,7 +1,6 @@
 from google_client import GoogleApiInvoker
 from database_funcs import insert_data
 
-
 class SearchEngine:
     @staticmethod
     def find_top_stays_with_type(destination, activity_type):

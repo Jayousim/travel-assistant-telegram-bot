@@ -33,7 +33,6 @@ class Bot:
         response = f"{message}! great choice!! {emoji.emojize(':grinning_face_with_big_eyes:')}" \
                    f"\n\n what would you like to be close by your hotel?\n"
         Bot.send_message(chat_id, response)
-        return True
 
     @staticmethod
     def category(category, chat_id):
@@ -62,7 +61,6 @@ class Bot:
 
     @staticmethod
     def get_photo_of_hotel(hotel_name):
-        print(Bot.last_hotels)
         for hotel in Bot.last_hotels:
             if hotel.get('name') == hotel_name:
                 return SearchEngine.get_place_photos(hotel)

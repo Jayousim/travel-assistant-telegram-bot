@@ -13,6 +13,7 @@ def insert_data(hotels_activities, destination, activity_type):
                 cursor.execute(query)
                 DBConnection.Instance().get_db().commit()
 
+
 def get_data_for_buttons(chat_id):
     ans = {}
     with DBConnection.Instance().get_db().cursor() as cursor:

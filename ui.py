@@ -57,6 +57,7 @@ def show_first_activity(chat_id, message_id, data, chosen_hotel, activity):
                  .format(TOKEN, chat_id, message_id, activity + "\nHERE ACTIVITY DESCRIPTION", temp))
     return Response("success")
 
+@app.route('/message', methods=["POST"])
 def handle_message():
     #return Response('s')
     print("got message")

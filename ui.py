@@ -9,22 +9,30 @@ giphy_api_key = '7zuDeZ3gqSF0rmJpkOai7b625nmYgOfO'
 
 app = Flask(__name__)
 
-
-def set_hotel_button(hotel_name):
-    return [telegram.InlineKeyboardButton(hotel_name, callback_data=hotel_name)]
+g_counter = 0
+def set_hotel_button(hotel_name, length):
+    global g_counter
+    g_counter += 1
+    return [telegram.InlineKeyboardButton(str(g_counter) + '. ' + hotel_name + ' - found ' + str(length), callback_data=hotel_name)]
 
 
 def get_next_activity(activity, activities):
+    if activities[0] == activities[-1]:
+        return None
     index = activities.index(activity)
     if index >= len(activities) - 1:
-        return activity
+        return activities[0]
+        #return activity
     return activities[index + 1]
 
 
 def get_previous_activity(activity, activities):
+    if activities[0] == activities[-1]:
+        return None
     index = activities.index(activity)
     if index == 0:
-        return activity
+        return activities[-1]
+        #return activity
     return activities[index - 1]
 
 
@@ -38,7 +46,7 @@ def set_activity_buttons(activity, hotel):
 def show_only_hotels_buttons(chat_id, hotel_names, destination):
     requests.get("https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}"
                  .format(TOKEN, chat_id, "Yay!! Look what I found for you in " + destination))
-    keyboard = [set_hotel_button(hotel_name) for hotel_name in hotel_names]
+    keyboard = [set_hotel_button(hotel_name, len(hotel_names.get(hotel_name))) for hotel_name in hotel_names.keys()]
     reply_markup = telegram.InlineKeyboardMarkup(keyboard)
     print(reply_markup)
     temp = json.dumps(reply_markup.to_dict())
@@ -52,16 +60,17 @@ def show_only_hotels_buttons(chat_id, hotel_names, destination):
 
 
 def show_first_activity(chat_id, message_id, data, chosen_hotel, activity):
+    print("activityyyyyyyyyyyyyy: ", activity)
     photo = get_photo_ref(activity)[0]
     print("photo ", photo)
-    if not photo:
-        photo = 'https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png'
+    if photo == 'None':
+        photo = 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'
     else:
-        photo = SearchEngine.get_place_photos_from_reference(photo)
+        photo = SearchEngine.get_place_photos_from_reference(photo).url
     print("photo ", photo)
     keyboard = []
     for hotel in data.keys():
-        keyboard.append(set_hotel_button(hotel))
+        keyboard.append(set_hotel_button(hotel, len(data.get(hotel))))
     keyboard.insert(0, set_activity_buttons(activity, chosen_hotel))
     reply_markup = telegram.InlineKeyboardMarkup(keyboard)
     telegram.Bot(TOKEN).editMessageMedia(chat_id, message_id,media=telegram.InputMediaPhoto(photo, caption=activity), reply_markup=reply_markup)
@@ -70,6 +79,8 @@ def show_first_activity(chat_id, message_id, data, chosen_hotel, activity):
 #@app.route('/message', methods=["POST"])
 def handle_message():
     #return Response('s')
+    global g_counter
+    g_counter = 0
     print("got message")
     print(request.get_json())
     if request.get_json().get('callback_query'):
@@ -86,14 +97,18 @@ def handle_message():
         if callback_message.startswith('previous'):
             hotel = callback_message.split('!')[2]
             activity = get_previous_activity(callback_message.split('!')[1], data[hotel])
+            if not activity:
+                return Response('success')
             return show_first_activity(chat_id, message_id, data, hotel, activity)
         if callback_message.startswith('next'):
             hotel = callback_message.split('!')[2]
             activity = get_next_activity(callback_message.split('!')[1], data[hotel])
+            if not activity:
+                return Response('success')
             return show_first_activity(chat_id, message_id, data, hotel, activity)
         activity = data[callback_message][0]
         return show_first_activity(chat_id, message_id, data, callback_message, activity)
-    return show_only_hotels_buttons(chat_id, data.keys(), destination)
+    return show_only_hotels_buttons(chat_id, data, destination)
 
 
 if __name__ == '__main__':

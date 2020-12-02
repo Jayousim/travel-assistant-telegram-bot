@@ -28,6 +28,7 @@ class SearchEngine:
     def get_place_photos_from_reference(reference):
         return GoogleApiInvoker.get_place_photos(reference)
 
+
     @staticmethod
     def get_street_photos(location):
         pass

@@ -32,13 +32,13 @@ class Bot:
     @staticmethod
     def travel_destination(message, chat_id):
         response = f"{message}! great choice!! {emoji.emojize(':grinning_face_with_big_eyes:')}" \
-                   f"\n\n what would you like to be close by your hotel?\n" \
-
+                   f"\n\n what would you like to be close by your hotel?\n"
         Bot.send_message(chat_id, response)
 
     @staticmethod
-    def category(message, chat_id):
-        my_list = message.split()
+    def category(category, chat_id):
+        destination = get_message(chat_id)[0][0]
+        hotels = Bot.return_relevant_hotels(destination, category)
         return handle_message()
 
     @staticmethod

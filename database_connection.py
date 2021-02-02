@@ -1,7 +1,6 @@
 #import mysql.connector
 import pymysql
-
-
+from config import data_base_pass
 class Singleton:
 
     def __init__(self, cls):
@@ -40,7 +39,7 @@ class DBConnection(object):
             self.my_db = pymysql.connect(
                 host="localhost",
                 user="root",
-                password="",
+                password = data_base_pass,
                 database="",
                 #auth_plugin='mysql_native_password'
             )
